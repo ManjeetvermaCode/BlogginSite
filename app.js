@@ -108,11 +108,13 @@ app.post('/blogs/:id/comments',validateReview, catchAsync(async (req, res) => {
     res.redirect(`/blogs/${Blog._id}`);
 }))
 
-app.delete('/blogs/:id/comments/:commentsId', catchAsync(async (req, res) => {
-    const { id, commentId } = req.params;
-    await Campground.findByIdAndUpdate(id, { $pull: { reviews: commentId } });
-    await Review.findByIdAndDelete(commentId);
+app.delete('/blogs/:id/comments/:c_id', catchAsync(async (req, res) => {
+    
+    const { id, c_id } = req.params;
+    await Campground.findByIdAndUpdate(id, { $pull: { reviews: c_id } });//pull operator removes from an existing array of a value that matches a specified condition, in this delete all the id's that are in the blog.
+    await Review.findByIdAndDelete(c_id);
     res.redirect(`/blogs/${id}`);
+    
 }))
 
 app.all('*', (req, res, next) => {
