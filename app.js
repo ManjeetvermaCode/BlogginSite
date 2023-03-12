@@ -93,7 +93,7 @@ app.put('/blogs/:id', validateblog, catchAsync(async (req, res) => {
 
 app.delete('/blogs/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
-    await Campground.findByIdAndDelete(id);
+    await Campground.findByIdAndDelete(id);//this will trigger the findOneandDelete() middleware in the campground model.
     res.redirect('/blogs');
 }));
 
@@ -132,3 +132,4 @@ app.listen(3000, () => {
 })
 
 
+//here if we'll delete a blog its associated comments will not get delete from database.that's why we need campground deletion middleware that will delete all associated comments when blog will get delete.
