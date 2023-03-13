@@ -19,18 +19,30 @@
                     Looks good!
                 </div>
             </div>
+
             <div class="mb-3">
-                <label class="form-label" for="description">Description</label>
-                <textarea class="form-control" type="text" id="description" name="blog[body]" required >XYZ</textarea>
+                <label class="form-label" for="body">Blog Body</label>
+                <textarea class="form-control"  type="text" id="body" name="blog[body]"  required ><%=blog.body %></textarea>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
             </div>
+
             <div class="mb-3">
-                <button class="btn btn-info">Update Blog</button>
+                <label class="form-label" for="desc">Blog Description</label>
+                <textarea class="form-control" type="text" id="desc" name="blog[Description]"  required ><%=blog.description %></textarea>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+
+           
+            <div class=" d-inline">
+                <button class="btn btn-info mb-3">Update Blog</button>
+                <a class="btn btn-info mb-3" href="/blogs/<%= blog._id%>">Back To Blog</a>
+
             </div>
         </form>
-        <a href="/blogs/<%= blog._id%>">Back To Blog</a>
 
     </div>
 </div>
