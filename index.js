@@ -9,6 +9,9 @@ const methodOverride = require('method-override');
 const Campground = require('./models/campground');
 const Review = require('./models/review');
 const campground = require('./models/campground');
+const session=require('express-session')
+const flash=require('connect-flash')
+const blog=require('./routes/blogroutes')
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
@@ -31,6 +34,8 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
+app.use('/blogs',blog)
+
 const validateblog = (req, res, next) => {
     const { error } = blogschema.validate(req.body);
     if (error) {
@@ -52,51 +57,10 @@ const validateReview = (req, res, next) => {
 }
 
 //start of blog routes
+
 app.get('/', (req, res) => {
     res.render('home')
 });
-app.get('/blogs', catchAsync(async (req, res) => {
-    const blog = await Campground.find({});
-   res.render('campgrounds/index', { blog })
-   //res.send('working')
-}));
-
-app.get('/blogs/new', (req, res) => {
-    res.render('campgrounds/new');
-})
-
-
-app.post('/blogs', validateblog, catchAsync(async (req, res, next) => {
-    // if (!req.body.campground) throw new ExpressError('Invalid Campground Data', 400);
-    const blog = new Campground(req.body.blog);
-    await blog.save();
-    res.redirect(`/blogs/${blog._id}`)
-}))
-
-app.get('/blogs/:id', catchAsync(async (req, res,) => {
-    const blog = await Campground.findById(req.params.id).populate('reviews');
-    res.render('campgrounds/show', { blog });
-}));
-
-app.get('/blogs/:id/edit', catchAsync(async (req, res) => {
-    const blog = await Campground.findById(req.params.id)
-    res.render('campgrounds/edit', { blog });
-}))
-
-app.put('/blogs/:id', validateblog, catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const blog = await Campground.findByIdAndUpdate(id, { ...req.body.blog });
-    res.redirect(`/blogs/${blog._id}`)
-}));
-
-
-
-app.delete('/blogs/:id', catchAsync(async (req, res) => {
-    const { id } = req.params;
-    await Campground.findByIdAndDelete(id);//this will trigger the findOneandDelete() middleware in the campground model.
-    res.redirect('/blogs');
-}));
-
 //start of comments routes
 
 app.post('/blogs/:id/comments',validateReview, catchAsync(async (req, res) => {
