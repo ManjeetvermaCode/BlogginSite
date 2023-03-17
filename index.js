@@ -30,6 +30,8 @@ app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+app.use(express.static('public'))//used for serving public assests like images or css,js files.
+
 
 app.use('/blogs',blog)
 app.use('/blogs/:id/comments',review)
