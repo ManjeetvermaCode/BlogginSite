@@ -44,6 +44,13 @@ const sessionconfig={
     }
 }
 app.use(session(sessionconfig))
+app.use(flash())
+
+app.use((req,res,next)=>{//declaring middleware for flash
+    res.locals.success=req.flash('success')//storing key of success under res.locals.success, so that we can use it in ejs files.
+    res.locals.error=req.flash('error')
+    next()
+})
 
 app.use('/blogs',blog)
 app.use('/blogs/:id/comments',review)
