@@ -9,7 +9,8 @@ const session=require('express-session')
 const flash=require('connect-flash')
 
 const blog=require('./routes/blogroutes')
-const review=require('./routes/commentroutes')
+const review=require('./routes/commentroutes');
+const { date } = require('joi');
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
@@ -32,6 +33,17 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static('public'))//used for serving public assests like images or css,js files.
 
+const sessionconfig={
+    secret:'thisisasecretig',
+    resave:true,
+    saveUninitialized:true,
+    cookie:{
+        httpOnly:true,
+        expires:Date.now()+1000*60*60*24*7,
+        maxAge:1000*60*60*24*7
+    }
+}
+app.use(session(sessionconfig))
 
 app.use('/blogs',blog)
 app.use('/blogs/:id/comments',review)
