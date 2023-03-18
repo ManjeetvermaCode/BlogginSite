@@ -18,6 +18,7 @@ const validateblog = (req, res, next) => {
 
 router.get('/', catchAsync(async (req, res) => {
     const blog = await Campground.find({});
+    
    res.render('campgrounds/index', { blog })
    //res.send('working')
 }));
@@ -31,22 +32,33 @@ router.post('/', validateblog, catchAsync(async (req, res, next) => {
     // if (!req.body.campground) throw new ExpressError('Invalid Campground Data', 400);
     const blog = new Campground(req.body.blog);
     await blog.save();
+    req.flash('success','campground created successfully')
     res.redirect(`/blogs/${blog._id}`)
 }))
 
 router.get('/:id', catchAsync(async (req, res,) => {
     const blog = await Campground.findById(req.params.id).populate('reviews');
+    if(!blog){
+        req.flash('error','Blog not found')
+        return res.redirect('/blogs')
+      }
     res.render('campgrounds/show', { blog,});
 }));
 
 router.get('/:id/edit', catchAsync(async (req, res) => {
     const blog = await Campground.findById(req.params.id)
+    if(!blog){
+         req.flash('error','Blog not found')
+         return res.redirect('/blogs')
+
+      }
     res.render('campgrounds/edit', { blog });
 }))
 
 router.put('/:id', validateblog, catchAsync(async (req, res) => {
     const { id } = req.params;
     const blog = await Campground.findByIdAndUpdate(id, { ...req.body.blog });
+    req.flash('success','Successfully Updated the Blog')
     res.redirect(`/blogs/${blog._id}`)
 }));
 
@@ -55,6 +67,7 @@ router.put('/:id', validateblog, catchAsync(async (req, res) => {
 router.delete('/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);//this will trigger the findOneandDelete() middleware in the campground model.
+    req.flash('success','Successfully deleted the blog')
     res.redirect('/blogs');
 }));
 module.exports=router;
