@@ -60,6 +60,7 @@ passport.deserializeUser(user.deserializeUser())//and vice versa. Both functions
 app.use((req,res,next)=>{//declaring middleware for flash
     res.locals.success=req.flash('success')//storing key of success under res.locals.success, so that we can use it in ejs files.
     res.locals.error=req.flash('error')
+    res.locals.currentuser=req.user
     next()
 })
 
