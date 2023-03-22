@@ -3,8 +3,8 @@ const router=express.Router()
 const catchAsync = require('../utils/catchAsync');
 const ExpressError = require('../utils/ExpressError');
 const { blogschema } = require('../schemas.js');
-const Campground = require('../models/campground');
-
+const Campground = require('../models/blog');
+const {isLoggedIn}=require('../middleware')
 
 const validateblog = (req, res, next) => {
     const { error } = blogschema.validate(req.body);
@@ -23,12 +23,12 @@ router.get('/', catchAsync(async (req, res) => {
    //res.send('working')
 }));
 
-router.get('/new', (req, res) => {
+router.get('/new',isLoggedIn, (req, res) => {
     res.render('campgrounds/new');
 })
 
 
-router.post('/', validateblog, catchAsync(async (req, res, next) => {
+router.post('/', validateblog,isLoggedIn, catchAsync(async (req, res, next) => {
     // if (!req.body.campground) throw new ExpressError('Invalid Campground Data', 400);
     const blog = new Campground(req.body.blog);
     await blog.save();
@@ -45,7 +45,7 @@ router.get('/:id', catchAsync(async (req, res,) => {
     res.render('campgrounds/show', { blog,});
 }));
 
-router.get('/:id/edit', catchAsync(async (req, res) => {
+router.get('/:id/edit',isLoggedIn, catchAsync(async (req, res) => {
     const blog = await Campground.findById(req.params.id)
     if(!blog){
          req.flash('error','Blog not found')
@@ -55,7 +55,7 @@ router.get('/:id/edit', catchAsync(async (req, res) => {
     res.render('campgrounds/edit', { blog });
 }))
 
-router.put('/:id', validateblog, catchAsync(async (req, res) => {
+router.put('/:id',isLoggedIn, validateblog, catchAsync(async (req, res) => {
     const { id } = req.params;
     const blog = await Campground.findByIdAndUpdate(id, { ...req.body.blog });
     req.flash('success','Successfully Updated the Blog')
@@ -64,7 +64,7 @@ router.put('/:id', validateblog, catchAsync(async (req, res) => {
 
 
 
-router.delete('/:id', catchAsync(async (req, res) => {
+router.delete('/:id',isLoggedIn, catchAsync(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);//this will trigger the findOneandDelete() middleware in the campground model.
     req.flash('success','Successfully deleted the blog')
