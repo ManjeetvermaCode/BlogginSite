@@ -1,7 +1,7 @@
 const express=require('express')
 const router=express.Router({mergeParams:true})//this parameter is specified for accessing the 'id' of blog (blog/:id),which otherwise req.params will not have access to. 
-const Campground = require('../models/campground');
-const Review = require('../models/review');
+const Campground = require('../models/blog');
+const Review = require('../models/comment');
 const catchAsync = require('../utils/catchAsync');
 const ExpressError = require('../utils/ExpressError');
 const { reviewSchema } = require('../schemas.js');

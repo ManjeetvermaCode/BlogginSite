@@ -1,6 +1,6 @@
 const { string } = require('joi');
 const mongoose = require('mongoose');
-const Review = require('./review')
+const Review = require('./comment')
 const Schema = mongoose.Schema;
 
 const BlogSchema = new Schema({

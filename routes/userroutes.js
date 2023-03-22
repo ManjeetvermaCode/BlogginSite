@@ -5,7 +5,7 @@ const user=require('../models/user')
 const passport = require('passport')
 
 router.get('/register',(req,res)=>{
-    res.render('users/registerform')//rendering resiter form 
+    res.render('users/registerform')//rendering register form 
 })
 
 router.post('/register',catchAsync(async(req,res)=>{
@@ -17,7 +17,7 @@ router.post('/register',catchAsync(async(req,res)=>{
         req.flash('success','Successfully registered!')
         res.redirect('/blogs')
     }catch(e){
-        req.flash('error',e.message)
+        req.flash('error','e.message')
         res.redirect('/register')
     }
     
@@ -30,4 +30,13 @@ router.post('/login',passport.authenticate('local',{failureFlash:true,failureRed
     req.flash('success','You loggedin successfully')
     res.redirect('/blogs')
 })
+
+router.get('/logout', (req, res, next) => {
+    req.logout(function(err) {
+      if (err) { return next(err); }
+      req.flash('success', "Goodbye!");
+      return res.redirect('/blogs');
+    });
+  });
+
 module.exports=router
