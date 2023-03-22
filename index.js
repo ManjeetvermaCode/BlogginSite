@@ -4,16 +4,17 @@ const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
-
+const ExpressError = require('./utils/ExpressError');
 const session=require('express-session')
 const flash=require('connect-flash')
 
-const blog=require('./routes/blogroutes')
-const review=require('./routes/commentroutes');
-const { date } = require('joi');
-const user=require('./models/user')
+const blogroutes=require('./routes/blogroutes')
+const reviewroutes=require('./routes/commentroutes');
+const userroutes=require('./routes/userroutes');
 const passport=require('passport')//allow us to implement multiple stratergy for authenticaiton
 const localstratergy=require('passport-local')
+
+const user=require('./models/user')
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
@@ -62,9 +63,9 @@ app.use((req,res,next)=>{//declaring middleware for flash
     next()
 })
 
-app.use('/blogs',blog)
-app.use('/blogs/:id/comments',review)
-
+app.use('/',userroutes)
+app.use('/blogs',blogroutes)
+app.use('/blogs/:id/comments',reviewroutes)
 
 
 app.get('/', (req, res) => {
