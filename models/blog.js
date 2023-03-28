@@ -1,6 +1,4 @@
-const { string } = require('joi');
 const mongoose = require('mongoose');
-const Review = require('./comment')
 const Schema = mongoose.Schema;
 
 const BlogSchema = new Schema({
@@ -8,6 +6,10 @@ const BlogSchema = new Schema({
     image: String,
     body: String,
     description:String,
+    author: { 
+        type: Schema.Types.ObjectId, 
+        ref: 'User' 
+    },
     reviews: [
         {
             type: Schema.Types.ObjectId,
