@@ -13,7 +13,7 @@ router.post('/register',catchAsync(async(req,res)=>{
         const {username,email,password}=req.body
         const newuser=new user({email,username})
         const registereduser=await user.register(newuser,password)
-        req.login(registereduser,(err)=>{
+        req.login(registereduser,(err)=>{//this will enable us to login instataniously after a user register, with out it user will have to login manualy after registering. 
             if(err)return next(err)
             req.flash('success','Successfully registered!')
             res.redirect('/blogs')
@@ -31,7 +31,9 @@ router.get('/login',(req,res)=>{
 })
 router.post('/login',passport.authenticate('local',{failureFlash:true,failureRedirect:'/login'}),(req,res)=>{
     req.flash('success','You loggedin successfully')
-    res.redirect('/blogs')
+    const redirect=req.session.returnTo || '/blogs'
+    delete req.session.returnTo
+    res.redirect(redirect)
 })
 
 router.get('/logout', (req, res, next) => {
