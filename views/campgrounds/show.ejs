@@ -10,6 +10,7 @@
                 <li class="list-group-item"><%= blog.body%></li>
             </ul>
             <div class="card-body">
+                <p>Created by : <%= blog.author.username %></p>
                 <a class="card-link btn btn-info" href="/blogs/<%=blog._id%>/edit">Edit</a>
                 <form class="d-inline" action="/blogs/<%=blog._id%>?_method=DELETE" method="POST">
                     <button class="btn btn-danger">Delete</button>

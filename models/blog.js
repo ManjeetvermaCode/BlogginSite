@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
+//const User=require('../models/user')
 const BlogSchema = new Schema({
     title: String,
     image: String,

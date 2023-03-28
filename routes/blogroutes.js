@@ -5,7 +5,6 @@ const ExpressError = require('../utils/ExpressError');
 const { blogschema } = require('../schemas.js');
 const Campground = require('../models/blog');
 const {isLoggedIn}=require('../middleware')
-const passport = require('passport')
 
 
 const validateblog = (req, res, next) => {
@@ -34,14 +33,14 @@ router.post('/', validateblog,isLoggedIn, catchAsync(async (req, res, next) => {
     // if (!req.body.campground) throw new ExpressError('Invalid Campground Data', 400);
     const blog = new Campground(req.body.blog);
     blog.author=req.user._id
+    //console.log(blog)
     await blog.save();
     req.flash('success','campground created successfully')
     res.redirect(`/blogs/${blog._id}`)
 }))
 
 router.get('/:id', catchAsync(async (req, res,) => {
-    const blog = await Campground.findById(req.params.id).populate('reviews').populate('author');
-    console.log(blog)
+    const blog = await Campground.findById(req.params.id).populate('reviews').populate('author');//(people on discord)having trouble here
     if(!blog){
         req.flash('error','Blog not found')
         return res.redirect('/blogs')
