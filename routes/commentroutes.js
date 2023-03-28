@@ -3,22 +3,13 @@ const router=express.Router({mergeParams:true})//this parameter is specified for
 const Campground = require('../models/blog');
 const Review = require('../models/comment');
 const catchAsync = require('../utils/catchAsync');
-const ExpressError = require('../utils/ExpressError');
-const { reviewSchema } = require('../schemas.js');
+const {validateReview,isLoggedIn}=require('../middleware')
 
-const validateReview = (req, res, next) => {
-    const { error } = reviewSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(el => el.message).join(',')
-        throw new ExpressError(msg, 400)
-    } else {
-        next();
-    }
-}
 
-router.post('/',validateReview, catchAsync(async (req, res) => {
+router.post('/',isLoggedIn,validateReview, catchAsync(async (req, res) => {
     const Blog = await Campground.findById(req.params.id);
     const review = new Review(req.body.review);
+    review.author=req.user._id
     Blog.reviews.push(review);
     await review.save();
     await Blog.save();

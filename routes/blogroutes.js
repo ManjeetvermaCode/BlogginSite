@@ -1,31 +1,11 @@
 const express=require('express')
 const router=express.Router()
 const catchAsync = require('../utils/catchAsync');
-const ExpressError = require('../utils/ExpressError');
-const { blogschema } = require('../schemas.js');
+
 const Campground = require('../models/blog');
-const {isLoggedIn}=require('../middleware');
+const {isLoggedIn,validateblog,isAuthor}=require('../middleware');
 
 
-const validateblog = (req, res, next) => {
-    const { error } = blogschema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(el => el.message).join(',')
-        throw new ExpressError(msg, 400)
-    } else {
-        next();
-    }
-}
-
-const isAuthor=async(req,res,next)=>{
-    const {id}=req.params
-    const blog=await Campground.findById(id)
-    if(blog.author!==req.user._id){
-        req.flash('error','You do not have the permission')
-        return res.redirect(`/blogs/${blog._id}`)
-    }
-    next()
-}
 
 router.get('/', catchAsync(async (req, res) => {
     const blog = await Campground.find({});
@@ -49,8 +29,8 @@ router.post('/', validateblog,isLoggedIn,isAuthor, catchAsync(async (req, res, n
     res.redirect(`/blogs/${blog._id}`)
 }))
 
-router.get('/:id',isLoggedIn, catchAsync(async (req, res,) => {
-    const blog = await Campground.findById(req.params.id).populate('reviews').populate('author');//(people on discord)having trouble here
+router.get('/:id', catchAsync(async (req, res,) => {
+    const blog = await Campground.findById(req.params.id).populate({ path:'reviews',populate:{path:'author'}}).populate('author');//this is saying populate the reviews and then populate it's associated author, then finally populate the author(blog).
     if(!blog){
         req.flash('error','Blog not found')
         return res.redirect('/blogs')
