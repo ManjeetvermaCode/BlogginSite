@@ -1,6 +1,7 @@
 const ExpressError = require('./utils/ExpressError');
 const { blogschema,reviewSchema } = require('./schemas.js');
 const Campground = require('./models/blog');
+const comment = require('./models/comment');
 
 module.exports.isLoggedIn=(req,res,next)=>{
     if(!req.isAuthenticated()){//this method is provided by passport
@@ -24,9 +25,19 @@ module.exports.validateblog = (req, res, next) => {
 module.exports.isAuthor=async(req,res,next)=>{
     const {id}=req.params
     const blog=await Campground.findById(id)
-    if(blog.author!==req.user._id){
+    if(!blog.author.equals(req.user._id)){
         req.flash('error','You do not have the permission')
         return res.redirect(`/blogs/${blog._id}`)
+    }
+    next()
+}
+
+module.exports.isCommentAuthor=async(req,res,next)=>{
+    const {id,c_id}=req.params
+    const comm=await comment.findById(c_id)
+    if(!comm.author.equals(req.user._id)){
+        req.flash('error','You do not have the permission')
+        return res.redirect(`/blogs/${id}`)
     }
     next()
 }
@@ -40,3 +51,5 @@ module.exports.validateReview = (req, res, next) => {
         next();
     }
 }
+
+//         <% if(currentuser && review.author.equals(currentuser._id)){ %>     

@@ -48,7 +48,8 @@
             <div class="card-body">
                 <p class="card-text">Comment: <%= review.body %></p>
                 <p class="card-subtitle mb-2 text-muted">By <%= review.author.username %></p>
-            <% if(currentuser && review.author.equals(currentuser._id)){ %>
+                    <% if(currentuser && review.author.equals(currentuser._id)){ %>     
+
                 <form action="/blogs/<%=blog._id%>/comments/<%=review._id%>?_method=DELETE" method="POST">
                     <button class="btn btn-sm btn-danger">Delete</button>
                 </form>
