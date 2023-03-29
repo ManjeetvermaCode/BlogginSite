@@ -27,7 +27,7 @@ module.exports.isAuthor=async(req,res,next)=>{
     const blog=await Campground.findById(id)
     if(!blog.author.equals(req.user._id)){
         req.flash('error','You do not have the permission')
-        return res.redirect(`/blogs/${blog._id}`)
+        return res.redirect(`/blogs/${id}`)
     }
     next()
 }
@@ -52,4 +52,3 @@ module.exports.validateReview = (req, res, next) => {
     }
 }
 
-//         <% if(currentuser && review.author.equals(currentuser._id)){ %>     

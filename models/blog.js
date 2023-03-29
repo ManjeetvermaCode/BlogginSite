@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const Comment=require('../models/comment')
 //const User=require('../models/user')
 const BlogSchema = new Schema({
     title: String,
@@ -19,11 +20,10 @@ const BlogSchema = new Schema({
 });
 
 BlogSchema.post('findOneAndDelete', async function (doc) {//doc is the object that has deleted
-  
-    if (doc) {
-        await Review.deleteMany({
-            _id: {
-                $in: doc.reviews//here wi'll delete all comments whose id field is in the object(doc) that has deleted
+    if(doc){
+        await Comment.deleteMany({
+            _id:{
+                $in:doc.reviews
             }
         })
     }

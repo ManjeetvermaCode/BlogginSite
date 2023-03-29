@@ -19,7 +19,7 @@ router.get('/new',isLoggedIn, (req, res) => {
 })
 
 
-router.post('/', validateblog,isLoggedIn,isAuthor, catchAsync(async (req, res, next) => {
+router.post('/', validateblog,isLoggedIn,catchAsync(async (req, res) => {
     // if (!req.body.campground) throw new ExpressError('Invalid Campground Data', 400);
     const blog = new Campground(req.body.blog);
     blog.author=req.user._id
@@ -57,9 +57,9 @@ router.put('/:id',isLoggedIn, validateblog,isAuthor, catchAsync(async (req, res)
 
 
 
-router.delete('/:id',isLoggedIn,isAuthor, catchAsync(async (req, res) => {
+router.delete('/:id',isLoggedIn,isAuthor,catchAsync(async (req, res) => {
     const { id } = req.params;
-    await Campground.findByIdAndDelete(id);//this will trigger the findOneandDelete() middleware in the campground model.
+    await Campground.findByIdAndDelete(id);//this will trigger the findOneandDelete() middleware in the blog model.
     req.flash('success','Successfully deleted the blog')
     res.redirect('/blogs');
 }));
