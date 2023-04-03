@@ -16,3 +16,5 @@ module.exports.reviewSchema = Joi.object({
     }).required()
 })
 
+module.exports.pwSchema=Joi.string().min(8).pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).+$/).required() // at least one lowercase letter, one uppercase letter, one digit, and one special character
+
