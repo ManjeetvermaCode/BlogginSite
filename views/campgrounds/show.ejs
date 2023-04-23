@@ -1,33 +1,29 @@
 <% layout('layouts/boilerplate')%>
-<div class="row">
-    <div >
-        <div class="card mb-3">
-            <img src="<%= blog.image%>" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title"><%= blog.title%></h5>
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"><%= blog.body%></li>
 
-            </ul>
+<div class="container">
+    <div class="row justify-content-center my-2">
+      <div class="col-lg-8 col-md-10 col-sm-12">
+        <div class="card">
+          <img src="<%= blog.image %>" class="card-img-top" alt="Image">
+          <div class="card-body">
+            <h5 class="card-title"><%= blog.title %></h5>
+            <p class="card-text" style="line-height: normal"><%= blog.body %></p>
             <% if(currentuser && blog.author.equals(currentuser._id)){ %><%# currentuser is a variable that holds object of req.user, defiend in the index.js file as middleware %>
-            <div class="card-body">
+
                 <a class="card-link btn btn-info" href="/blogs/<%=blog._id%>/edit">Edit</a>
                 <form class="d-inline" action="/blogs/<%=blog._id%>?_method=DELETE" method="POST">
                     <button class="btn btn-danger">Delete</button>
                 </form>
-            </div>
-            <% } %>
-            <div class="card-footer text-muted">
-                <h6>Created by : <%= blog.author.username %></h6>
-
-                2 days ago
-
-            </div>
+                <% } %>
+            <a href="/blogs" class="btn btn-primary">All Blogs</a>
+          </div>
+          <div class="card-footer text-muted">
+            Posted on April 23, 2023 by <%= blog.author.username %>
+          </div>
         </div>
-
+      </div>
     </div>
-
+  </div>
     <div>
         <% if(currentuser){ %>
             <h2>Leave a comment</h2>
@@ -44,18 +40,36 @@
         </form>
         <% } %>
         <% for(let review of blog.reviews) { %>
-        <div class="card mb-3 ">
-            <div class="card-body">
-                <p class="card-text">Comment: <%= review.body %></p>
-                <p class="card-subtitle mb-2 text-muted">By <%= review.author.username %></p>
-                    <% if(currentuser && review.author.equals(currentuser._id)){ %>     
+            <h1 style="color:white; background:black; max-width:65%;margin:2.5% auto; text-align:center">Comments</h1>
 
-                <form action="/blogs/<%=blog._id%>/comments/<%=review._id%>?_method=DELETE" method="POST">
-                    <button class="btn btn-sm btn-danger">Delete</button>
-                </form>
-                <% } %>
+            <div class="card mb-3" style="max-width: 65%; margin: 0 auto;">
+                <div class="card-body">
+                    <p class="card-text">Comment: <%= review.body %></p>
+                    <p class="card-subtitle mb-2 text-muted">By <%= review.author.username %></p>
+                    <% if(currentuser && review.author.equals(currentuser._id)){ %>
+                    <form action="/blogs/<%=blog._id%>/comments/<%=review._id%>?_method=DELETE" method="POST">
+                        <button class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                    <% } %>
+                </div>
             </div>
-        </div>
+            
         <% } %>
     </div>
+
+    
+            
+      
+      
 </div>
+
+
+
+
+
+
+
+
+	
+
+
