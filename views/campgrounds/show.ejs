@@ -7,7 +7,7 @@
           <img src="<%= blog.image %>" class="card-img-top" alt="Image">
           <div class="card-body">
             <h5 class="card-title"><%= blog.title %></h5>
-            <p class="card-text" style="line-height: normal"><%= blog.body %></p>
+            <p class="card-text" style="line-height: normal; white-space:pre-wrap"><%= blog.body %></p>
             <% if(currentuser && blog.author.equals(currentuser._id)){ %><%# currentuser is a variable that holds object of req.user, defiend in the index.js file as middleware %>
 
                 <a class="card-link btn btn-info" href="/blogs/<%=blog._id%>/edit">Edit</a>
@@ -24,12 +24,12 @@
       </div>
     </div>
   </div>
-    <div>
+    <div style="max-width:65%;margin:2.5% auto; text-align:center">
         <% if(currentuser){ %>
             <h2>Leave a comment</h2>
 
         <form action="/blogs/<%=blog._id%>/comments" method="POST" class="mb-3 validated-form" novalidate>
-            <div class="mb-3">
+            <div class="mb-3" >
                 <label class="form-label" for="body">Comment</label>
                 <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3" required></textarea>
                 <div class="valid-feedback">
@@ -39,8 +39,9 @@
             <button class="btn btn-success">Submit</button>
         </form>
         <% } %>
+        
+
         <% for(let review of blog.reviews) { %>
-            <h1 style="color:white; background:black; max-width:65%;margin:2.5% auto; text-align:center">Comments</h1>
 
             <div class="card mb-3" style="max-width: 65%; margin: 0 auto;">
                 <div class="card-body">
