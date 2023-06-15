@@ -46,4 +46,12 @@ router.get('/logout', (req, res, next) => {
     });
   });
 
+// router.get('/admin',(req,res)=>{
+//     res.render('/users/admin')
+// })
+
+// router.post('/admin',(req,res,next)=>{
+
+// })
+
 module.exports=router

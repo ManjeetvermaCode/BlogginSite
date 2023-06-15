@@ -14,6 +14,10 @@ const userroutes=require('./routes/userroutes');
 const passport=require('passport')//allow us to implement multiple stratergy for authenticaiton
 const localstratergy=require('passport-local')
 
+//security packages
+const mongoSanitize = require('express-mongo-sanitize');
+
+
 const user=require('./models/user')
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
@@ -37,7 +41,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static('public'))//used for serving public assests like images or css,js files.
 
+app.use(mongoSanitize());
+
 const sessionconfig={
+    name:'session',
     secret:'thisisasecretig',
     resave:true,
     saveUninitialized:true,
