@@ -3,6 +3,8 @@ const { blogschema,reviewSchema,pwSchema } = require('./schemas.js');
 const Campground = require('./models/blog');
 const comment = require('./models/comment');
 
+
+
 module.exports.isLoggedIn=(req,res,next)=>{
     if(!req.isAuthenticated()){//this method is provided by passport
         req.session.returnTo=req.originalUrl;//will store if unloggedin user try to access secure features.
