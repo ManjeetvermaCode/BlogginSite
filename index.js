@@ -11,7 +11,6 @@ const ExpressError = require('./utils/ExpressError');
 const session=require('express-session')
 const flash=require('connect-flash')
 const helmet=require('helmet')
-const MongoDbStore=require('connect-mongo')(session)
 const user=require('./models/user')
 const blogroutes=require('./routes/blogroutes')
 const reviewroutes=require('./routes/commentroutes');
@@ -21,7 +20,6 @@ const localstratergy=require('passport-local')
 
 //security packages
 const mongoSanitize = require('express-mongo-sanitize');
-
 
 const dbUrl=process.env.db_url
 const dbLocalUrl='mongodb://localhost:27017/yelp-camp'
@@ -50,17 +48,8 @@ app.use(express.static('public'))//used for serving public assests like images o
 app.use(mongoSanitize());
 app.use(helmet({contentSecurityPolicy:false}))
 
-const store=new MongoDbStore({
-    url:dbUrl,
-    secret:'thisshouldbeagoodsecret',
-    touchAfter:24*60*60
-})
-store.on("error",function(e){
-    console.log('session store error',e)
-})
 
 const sessionconfig={
-    store,
     name:'session',
     secret:'thisisasecretig',
     resave:true,
