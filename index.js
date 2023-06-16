@@ -1,3 +1,6 @@
+if(process.env.NODE_ENV !=='production'){
+    require('dotenv').config()
+}
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -7,6 +10,7 @@ const methodOverride = require('method-override');
 const ExpressError = require('./utils/ExpressError');
 const session=require('express-session')
 const flash=require('connect-flash')
+const helmet=require('helmet')
 
 const blogroutes=require('./routes/blogroutes')
 const reviewroutes=require('./routes/commentroutes');
@@ -19,7 +23,8 @@ const mongoSanitize = require('express-mongo-sanitize');
 
 
 const user=require('./models/user')
-
+const dbUrl=process.env.db_url
+//'mongodb://localhost:27017/yelp-camp'
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -41,7 +46,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static('public'))//used for serving public assests like images or css,js files.
 
+
 app.use(mongoSanitize());
+app.use(helmet({contentSecurityPolicy:false}))
+
 
 const sessionconfig={
     name:'session',
