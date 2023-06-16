@@ -1,3 +1,6 @@
+if(process.env.NODE_ENV !=='production'){
+    require('dotenv').config()
+}
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -7,6 +10,8 @@ const methodOverride = require('method-override');
 const ExpressError = require('./utils/ExpressError');
 const session=require('express-session')
 const flash=require('connect-flash')
+const helmet=require('helmet')
+const MongoDbStore=require('connect-mongo')(session)
 
 const blogroutes=require('./routes/blogroutes')
 const reviewroutes=require('./routes/commentroutes');
@@ -19,8 +24,9 @@ const mongoSanitize = require('express-mongo-sanitize');
 
 
 const user=require('./models/user')
-
-mongoose.connect('mongodb://localhost:27017/yelp-camp', {
+const dbUrl=process.env.db_url
+const dbLocalUrl='mongodb://localhost:27017/yelp-camp'
+mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true
@@ -41,9 +47,21 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static('public'))//used for serving public assests like images or css,js files.
 
+
 app.use(mongoSanitize());
+app.use(helmet({contentSecurityPolicy:false}))
+
+const store=new MongoDbStore({
+    url:dbLocalUrl,
+    secret:'thisshouldbeagoodsecret',
+    touchAfter:24*60*60
+})
+store.on("error",function(e){
+    console.log('session store error',e)
+})
 
 const sessionconfig={
+    store,
     name:'session',
     secret:'thisisasecretig',
     resave:true,
@@ -55,6 +73,7 @@ const sessionconfig={
     }
 }
 app.use(session(sessionconfig))
+
 app.use(flash())
 
 app.use(passport.initialize())
