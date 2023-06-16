@@ -12,7 +12,7 @@ const session=require('express-session')
 const flash=require('connect-flash')
 const helmet=require('helmet')
 const MongoDbStore=require('connect-mongo')(session)
-
+const user=require('./models/user')
 const blogroutes=require('./routes/blogroutes')
 const reviewroutes=require('./routes/commentroutes');
 const userroutes=require('./routes/userroutes');
@@ -23,7 +23,6 @@ const localstratergy=require('passport-local')
 const mongoSanitize = require('express-mongo-sanitize');
 
 
-const user=require('./models/user')
 const dbUrl=process.env.db_url
 const dbLocalUrl='mongodb://localhost:27017/yelp-camp'
 mongoose.connect(dbUrl, {
@@ -52,7 +51,7 @@ app.use(mongoSanitize());
 app.use(helmet({contentSecurityPolicy:false}))
 
 const store=new MongoDbStore({
-    url:dbLocalUrl,
+    url:dbUrl,
     secret:'thisshouldbeagoodsecret',
     touchAfter:24*60*60
 })
