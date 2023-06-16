@@ -26,7 +26,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const user=require('./models/user')
 const dbUrl=process.env.db_url
 const dbLocalUrl='mongodb://localhost:27017/yelp-camp'
-mongoose.connect(dbLocalUrl, {
+mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true
